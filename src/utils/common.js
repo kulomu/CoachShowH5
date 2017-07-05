@@ -22,6 +22,18 @@ let common = {
        let exdate = new Date();
        exdate.setDate(exdate.getDate() + expiredays);
        document.cookie = c_name + "=" + escape(value) + ((expiredays == null) ? "" : "; expires=" + exdate.toGMTString());
+    },
+    alert:(msg='错误提示',time=2000)=> {
+      let dom = document.createElement('div');
+      dom.className='alert';
+      dom.id='alert';
+      dom.innerHTML=msg;
+      if(!document.querySelector('#id')){
+          document.body.appendChild(dom);
+          setTimeout(function(){
+              document.body.removeChild(dom);
+          },time) 
+      }
     }
 }
 export default common;
