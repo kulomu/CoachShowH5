@@ -58,10 +58,11 @@ router.beforeEach((to, from, next) => {
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
-new Vue({
+var vue =  new Vue({
   el: '#app',
   store,
   router,
   template: '<App/>',
   components: { App }
 })
+export default{vue}
