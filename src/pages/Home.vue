@@ -7,26 +7,33 @@
           <CoachShow class="coachShow" :initData="coachDataList"></CoachShow>
         </mt-tab-container-item>
 
-<!--    <mt-tab-container-item id="1">
-          <RankingList :initData="coachDataList"></RankingList>
-        </mt-tab-container-item>
- -->
+        <!--    <mt-tab-container-item id="1">
+                  <RankingList :initData="coachDataList"></RankingList>
+                </mt-tab-container-item>
+         -->
         <mt-tab-container-item id="2">
           <Profile></Profile>
         </mt-tab-container-item>
       </mt-tab-container>
     </div>
+    <div style="background: #f7f8fd;height:0.56rem;width:100%;padding:0.6rem  0.6rem 0.44rem 0.6rem;">
+      <span style="font-size:0.56rem; margin-left:0.8rem;color:#7ac97">大叔</span>
+      <span style="font-size:0.56rem; margin-left:0.8rem;color:#7ac97">大叔</span>
+    </div>
+    <div style="width=100%;background: #f7f8fd;height:100">
 
-    <mt-tabbar v-model="selected" fixed >
+    </div>
+    <mt-tabbar v-model="selected" fixed>
       <mt-tab-item id="0">
         <icon slot="icon" name="ViewGallery" scale="20"></icon>
         {{tabs[0]}}
       </mt-tab-item>
-<!--  <mt-tab-item id="1">
-        <img slot="icon" src="../assets/100x100.png">{{tabs[1]}}
-      </mt-tab-item> -->
+      <!--  <mt-tab-item id="1">
+              <img slot="icon" src="../assets/100x100.png">{{tabs[1]}}
+            </mt-tab-item> -->
       <mt-tab-item id="2">
-        <icon slot="icon" name="account" scale="20"></icon>{{tabs[2]}}
+        <icon slot="icon" name="account" scale="20"></icon>
+        {{tabs[2]}}
       </mt-tab-item>
     </mt-tabbar>
 
@@ -43,6 +50,7 @@ export default {
 
   data () {
     return {
+      Authorization:"",
       selected: '0',
       tabs: ['教练秀场', '排行榜', '我的'],      // 排行榜不启用
       coachDataList: [],
@@ -151,11 +159,15 @@ export default {
 
   mounted() {
     this.getData();
+    this.getBanner();
+    this.getTag();
+    this.getCoach();
     this.$nextTick(() => {
       if(this.$route.params.tab) {
         this.selected = this.$route.params.tab + ''
       }
     });
+
   },
 
   methods: {
@@ -167,10 +179,29 @@ export default {
       //   console.log(this.coachDataList)
       // })
       this.coachDataList.push(...this.mockData)
+    },
+    getBanner() {
+      this.axios.post("userInfo/coachShow",{pageIndex:1,pageSize:10})
+      .then((response)=>{
+        console.log(response);
+      })
+    },
+    getTag() {
+      this.axios.post("userInfo/tagList",{})
+      .then((response)=>{
+        console.log(response);
+      })
+    },
+     getCoach() {
+      this.axios.post("userInfo/coachWithTag",{pageIndex:1,pageSize:10})
+      .then((response)=>{
+        console.log(response);
+      })
     }
   }
 
 }
+
 </script>
 
 <style scoped>
@@ -180,8 +211,9 @@ export default {
 }
 
 .page-wrap {
+  height:500px;
   overflow: auto;
   height: 100%;
-  padding-bottom: 55px;
 }
+
 </style>
