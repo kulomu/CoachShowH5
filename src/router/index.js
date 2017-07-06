@@ -8,6 +8,7 @@ import New from '@/pages/New'
 import Detail from '@/pages/Detail'
 import EditUser from '@/pages/EditUser'
 import RegMember from '@/pages/RegMember'
+import Success from '@/pages/Success'
 
 Vue.use(Router)
 
@@ -21,6 +22,7 @@ export default new Router({
     {path: '/new', name: 'New', component: New },
     {path: '/detail', name: 'Detail', component: Detail },
     {path: '/editUser', name: 'EditUser', component: EditUser },
-    {path: '/regMember', name: 'RegMember', component: RegMember}
+    {path: '/regMember', name: 'RegMember', component: RegMember},
+    {path: '/success', name: 'Success', component: Success},
   ]
 })

@@ -35,7 +35,8 @@
       <div class="phone">
           <label for="phone">电话</label>
           <input type="text" name="phone" v-model="phone">
-          <span class="msg-btn" @click="sendMsg">获取验证码</span>
+          <span  v-show='!sendFlag'  class="msg-btn" @click="sendMsg">获取验证码</span>
+          <span v-show='sendFlag' class="msg-btn-grey">剩余{{timeCount}}s</span>
       </div>
       <div>
           <label for="msgCode">验证码</label>
@@ -63,16 +64,74 @@ export default {
       name:"",
       phone:"",
       msgCode:"",
-      shool:"",
-      court:""
+      school:"",
+      court:"",
+      phoneREG:/^1[3|4|5|8][0-9]\d{4,8}$/,
+      sendFlag:false,
+      timeCount:30,
+      errMap:{
+        name:'请填写姓名',
+        phone:'请填写正确的手机号',
+        msgCode:'请填写正确的校验码',
+        school:'请填写驾校名称',
+        court:'请填写训练场名称'
+      }
     }
   },
   methods:{
     sendMsg(){
-      //  common.alert('请填手机号',2000);
+      let msgUrl = 'http://123.206.232.11:8080/coachFront/api/front/userInfo/sendMsg';
+      if(this.phone && this.phoneREG.test(this.phone)){
+        this.sendFlag = true;
+        let count =  setInterval(()=>{
+            if(this.timeCount==0){
+              clearInterval(count);
+              this.sendFlag=false;
+            }else{
+              this.timeCount = this.timeCount - 1;
+            } 
+        },1000);
+        this.axios.post(msgUrl,{mobile:this.phone}).then(res=>{
+          // console.log(res);
+          if(res&&res.data&&res.data.businessCode=='100'){
+             common.alert('验证码发送成功，请查看短信确认',1000);
+          } 
+        })
+      }else{
+        common.alert('请填写正确的手机号')
+      }
     },
     submit(){
-      
+      let err = this.checkForm();
+      console.log(err);
+      if(!err){
+          let checkMsg ='http://123.206.232.11:8080/coachFront/api/front/userInfo/checkMobileCode';
+          this.axios.post(checkMsg,{mobile:this.phone,code:this.msgCode}).then(res=>{
+              console.log(res);
+              if(res&&res.data&&res.data.businessCode=='100'){
+                // todo 提交
+                router.push('/success');
+              }else{
+                common.alert(res.data.returnMsg,1500);
+              }
+          })
+      }else{
+        common.alert(err,1000)
+      }
+        
+    },
+    checkForm(){
+      for(var key in this.errMap){
+        if(key =='phone'){
+          if(!this[key]||!this.phoneREG.test(this[key])){
+            return this.errMap[key]
+          }
+        }else{
+          if(!this[key]){
+             return this.errMap[key]
+          }
+        }
+      }
     }
   }
 };
@@ -169,5 +228,15 @@ export default {
 }
 .form-wrap div.phone .msg-btn-grey{
   background:linear-gradient(#eee,#ddd);
+  position:absolute;
+  right:5px;
+  top:50%;
+  margin-top: -15px;
+  line-height: 30px;
+  color: #fff;
+  border-radius:2px;
+  width:24%;
+  text-align: center;
+  font-size:12px;
 }
 </style>
