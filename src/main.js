@@ -9,9 +9,11 @@ import App from './App'
 import router from './router'
 import store from './vuex/store'
 import common from './utils/common'
-import axios from './utils/httpAjax'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
 
-Vue.prototype.$axios = axios.create({})
+Vue.use(VueAxios, axios)
+
 
 Vue.use(MintUI)
 Vue.use(VueAwesomeSwiper)
@@ -50,7 +52,7 @@ router.beforeEach((to, from, next) => {
       next()
     }
 
-})
+});
 
 Vue.config.productionTip = false
 
