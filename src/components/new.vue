@@ -1,5 +1,5 @@
 <template>
-  <!--<div class="page-field">
+  <div class="page-field">
     <div class="header">
       制作我的秀卡
     </div>
@@ -31,58 +31,96 @@
       </div>
       <div class="submit" @click="submit">提交</div>
     </div>
-  </div>-->
-  <div>
-    <New v-if='isNew' v-on:submited='submited'></New>
-    <Done v-if='isDone' :hasSubmited = 'hasSubmited' ></Done>
   </div>
 </template>
 
 <script>
-import New from '@/components/new'
-import Done from '@/components/done'
 import common from '../utils/common.js'
 import $http from '../utils/api.js'
-
 export default {
   name: 'page-field',
   data(){
     return {
-      isNew:false,
-      isDone:false,
-      hasSubmited:false,
-    };
-  },
-  components: {
-   New,
-   Done
-  },
-  mounted(){
-    let res =  this.post('apply/goApply',{})
-    if(res.result==true){
-      switch(res.data){
-         case 1:
-         ;
-         case 2:
-         this.isDone = true;
-         case 3:
-         this.isNew = true;
-         break;
-      };
-    }else{
-      this.isNew=true;
+      name:"",
+      phone:"",
+      msgCode:"",
+      school:"",
+      court:"",
+      phoneREG:/^1[3|4|5|8][0-9]\d{4,8}$/,
+      sendFlag:false,
+      timeCount:30,
+      errMap:{
+        name:'请填写姓名',
+        phone:'请填写正确的手机号',
+        msgCode:'请填写正确的校验码',
+        school:'请填写驾校名称',
+        court:'请填写训练场名称'
+      }
     }
   },
   methods:{
+     sendMsg(){ 
+      if(this.phone && this.phoneREG.test(this.phone)){
+        this.sendFlag = true;
+        let count =  setInterval(()=>{
+            if(this.timeCount==0){
+              clearInterval(count);
+              this.sendFlag=false;
+              // this.timeCount = 30;
+            }else{
+              this.timeCount = this.timeCount - 1;
+            } 
+        },1000);
+        let res = this.post('userInfo/sendMsg',{mobile:this.phone});
+        if(res){
+          common.alert('验证码发送成功，请查看短信确认',1000);
+        };
+      };
+    },
+    submit(){
+      let err = this.checkForm();
+      console.log(err);
+      if(!err){
+          let checkRes = this.post('userInfo/checkMobileCode',{mobile:this.phone,code:this.msgCode});
+          if(checkRes){
+            let submitRes = this.post('apply/save',{
+              name:this.name,
+              mobile:this.phone,
+              school:this.school,
+              trainingGround:this.court,
+            });
+            if(submitRes){
+              console.log(true);
+              this.$emit('submited');
+            }
+          }else{
+            common.alert('网络异常',1000);
+          };
+      }else{
+        common.alert(err,1000)
+      };    
+    },
+    checkForm(){
+      for(var key in this.errMap){
+        if(key =='phone'){
+          if(!this[key]||!this.phoneREG.test(this[key])){
+            return this.errMap[key]
+          }
+        }else{
+          if(!this[key]){
+             return this.errMap[key]
+          };
+        }
+      }
+    },
     async post(url,params){
       let res = await $http.post(url,params);
-      return res;
+      if(res){
+         return res.result;
+      }else{
+         return false;
+      }
     },
-    submited(){
-      this.isNew=false;
-      this.isDone=true;
-      this.hasSubmited = true;
-    }
   }
 };
 </script>
