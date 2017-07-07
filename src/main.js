@@ -20,7 +20,7 @@ Vue.use(MintUI)
 Vue.use(VueAwesomeSwiper)
 
 Vue.component('icon', Icon);
-
+Vue.use(router);
 
 // 在加载程序前调用用户信息接口
 router.beforeEach((to, from, next) => {

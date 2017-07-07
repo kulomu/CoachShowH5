@@ -21,6 +21,6 @@ export default new Router({
     {path: '/new', name: 'New', component: New },
     {path: '/detail', name: 'Detail', component: Detail },
     {path: '/editUser', name: 'EditUser', component: EditUser },
-    {path: '/regMember', name: 'RegMember', component: RegMember}
+    {path: '/regMember', name: 'RegMember', component: RegMember},
   ]
 })
