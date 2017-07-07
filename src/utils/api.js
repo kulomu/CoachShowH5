@@ -1,4 +1,4 @@
-import vue from '../main';
+import axios from 'axios'
 var token = sessionStorage.getItem("token");
 var obj = {
   baseURL: 'http://123.206.232.11:8080/coachFront/api/front/',
@@ -9,7 +9,7 @@ export  default{
     if (!token)
       delete obj.auth
     return new Promise((resolve, reject)=> {
-      this.axios.post(url, param, obj).then((r)=> {
+      axios.post(url, param, obj).then((r)=> {
         if (r.data && r.data.businessCode == 100) {
           r.data.returnData = JSON.parse(r.data.returnData);
           return resolve({result: true, data: r.data.returnData})
@@ -18,6 +18,5 @@ export  default{
         }
       })
     })
-
   }
 }

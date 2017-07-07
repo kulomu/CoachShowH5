@@ -44,110 +44,19 @@
 import CoachShow from '@/components/CoachShow'
 import RankingList from '@/components/RankingList'
 import Profile from '@/components/Profile'
+import http from '../utils/api.js'
 
 export default {
   name: 'Home',
 
   data () {
     return {
+      tag:[],
       Authorization:"",
       selected: '0',
       tabs: ['教练秀场', '排行榜', '我的'],      // 排行榜不启用
       coachDataList: [],
-      mockData: [
-        {
-          "id": 232,
-          "name": "王梦龙",
-          "imgUrl": "https://unsplash.it/240/240/?random",
-          "posterUrl": "https://unsplash.it/240/360/?random",
-          "year": 13,
-          "score": 3.6,
-          "isMember": false,
-          "driverSchool": "龙泉驾校",
-          "location": 2,
-          "address": "锦隆训练基地（xx区 xx路xx号，地铁1号线 富锦路站下车即到）",
-          "tags": ["脾气好", "责任心强", "通过率高", "教学细心", "教学细心", "教学细心", "教学细心", "教学细心", "脾气好"],
-          "description": "学员认认真真学车,就是对我们最好的回报,热线15000203668, 本驾校有一流的教学设备, 专业的教学教练, 具有学车快,拿证快等有点, 让您快乐学车, 轻松学车, 快速办银都驾校."
-        }, {
-          "id": 232,
-          "name": "王梦龙",
-          "imgUrl": "https://unsplash.it/240/240/?random",
-          "posterUrl": "https://unsplash.it/240/360/?random",
-          "year": 13,
-          "score": 3.6,
-          "isMember": false,
-          "driverSchool": "龙泉驾校",
-          "location": 2,
-          "address": "锦隆训练基地（xx区 xx路xx号，地铁1号线 富锦路站下车即到）",
-          "tags": ["脾气好", "责任心强", "通过率高", "教学细心", "教学细心", "教学细心", "教学细心", "教学细心", "脾气好"],
-          "description": "学员认认真真学车,就是对我们最好的回报,热线15000203668, 本驾校有一流的教学设备, 专业的教学教练, 具有学车快,拿证快等有点, 让您快乐学车, 轻松学车, 快速办银都驾校."
-        }, {
-          "id": 232,
-          "name": "王梦龙",
-          "imgUrl": "https://unsplash.it/240/240/?random",
-          "posterUrl": "https://unsplash.it/240/360/?random",
-          "year": 13,
-          "score": 3.6,
-          "isMember": false,
-          "driverSchool": "龙泉驾校",
-          "location": 2,
-          "address": "锦隆训练基地（xx区 xx路xx号，地铁1号线 富锦路站下车即到）",
-          "tags": ["脾气好", "责任心强", "通过率高", "教学细心", "教学细心", "教学细心", "教学细心", "教学细心", "脾气好"],
-          "description": "学员认认真真学车,就是对我们最好的回报,热线15000203668, 本驾校有一流的教学设备, 专业的教学教练, 具有学车快,拿证快等有点, 让您快乐学车, 轻松学车, 快速办银都驾校."
-        }, {
-          "id": 232,
-          "name": "王梦龙",
-          "imgUrl": "https://unsplash.it/240/240/?random",
-          "posterUrl": "https://unsplash.it/240/360/?random",
-          "year": 13,
-          "score": 3.6,
-          "isMember": false,
-          "driverSchool": "龙泉驾校",
-          "location": 2,
-          "address": "锦隆训练基地（xx区 xx路xx号，地铁1号线 富锦路站下车即到）",
-          "tags": ["脾气好", "责任心强", "通过率高", "教学细心", "教学细心", "教学细心", "教学细心", "教学细心", "脾气好"],
-          "description": "学员认认真真学车,就是对我们最好的回报,热线15000203668, 本驾校有一流的教学设备, 专业的教学教练, 具有学车快,拿证快等有点, 让您快乐学车, 轻松学车, 快速办银都驾校."
-        }, {
-          "id": 232,
-          "name": "王梦龙",
-          "imgUrl": "https://unsplash.it/240/240/?random",
-          "posterUrl": "https://unsplash.it/240/360/?random",
-          "year": 13,
-          "score": 3.6,
-          "isMember": false,
-          "driverSchool": "龙泉驾校",
-          "location": 2,
-          "address": "锦隆训练基地（xx区 xx路xx号，地铁1号线 富锦路站下车即到）",
-          "tags": ["脾气好", "责任心强", "通过率高", "教学细心", "教学细心", "教学细心", "教学细心", "教学细心", "脾气好"],
-          "description": "学员认认真真学车,就是对我们最好的回报,热线15000203668, 本驾校有一流的教学设备, 专业的教学教练, 具有学车快,拿证快等有点, 让您快乐学车, 轻松学车, 快速办银都驾校."
-        },{
-          "id": 232,
-          "name": "王梦龙",
-          "imgUrl": "https://unsplash.it/240/240/?random",
-          "posterUrl": "https://unsplash.it/240/360/?random",
-          "year": 13,
-          "score": 3.6,
-          "isMember": false,
-          "driverSchool": "龙泉驾校",
-          "location": 2,
-          "address": "锦隆训练基地（xx区 xx路xx号，地铁1号线 富锦路站下车即到）",
-          "tags": ["脾气好", "责任心强", "通过率高", "教学细心", "教学细心", "教学细心", "教学细心", "教学细心", "脾气好"],
-          "description": "学员认认真真学车,就是对我们最好的回报,热线15000203668, 本驾校有一流的教学设备, 专业的教学教练, 具有学车快,拿证快等有点, 让您快乐学车, 轻松学车, 快速办银都驾校."
-        }, {
-          "id": 232,
-          "name": "王梦龙",
-          "imgUrl": "https://unsplash.it/240/240/?random",
-          "posterUrl": "https://unsplash.it/240/360/?random",
-          "year": 13,
-          "score": 3.6,
-          "isMember": false,
-          "driverSchool": "龙泉驾校",
-          "location": 2,
-          "address": "锦隆训练基地（xx区 xx路xx号，地铁1号线 富锦路站下车即到）",
-          "tags": ["脾气好", "责任心强", "通过率高", "教学细心", "教学细心", "教学细心", "教学细心", "教学细心", "脾气好"],
-          "description": "学员认认真真学车,就是对我们最好的回报,热线15000203668, 本驾校有一流的教学设备, 专业的教学教练, 具有学车快,拿证快等有点, 让您快乐学车, 轻松学车, 快速办银都驾校."
-        }
-      ]
+      mockData: []
     }
   },
 
@@ -171,6 +80,10 @@ export default {
   },
 
   methods: {
+
+    selectTag(obj){
+      //for()
+    },
     getData() {
       //http://localhost:3000/api/coachList
       // this.axios.get("http://localhost/code/coach.json").then((response) => {
@@ -180,11 +93,13 @@ export default {
       // })
       this.coachDataList.push(...this.mockData)
     },
-    getBanner() {
-      this.axios.post("userInfo/coachShow",{pageIndex:1,pageSize:10})
-      .then((response)=>{
-        console.log(response);
-      })
+    async getBanner() {
+       var data = await http.post("userInfo/coachShow" ,{pageIndex:1,pageSize:10})
+       console.log(data);
+      //this.axios.post("userInfo/coachShow",{pageIndex:1,pageSize:10})
+      //.then((response)=>{
+      //  console.log(response);
+      //})
     },
     getTag() {
       this.axios.post("userInfo/tagList",{})
