@@ -9,9 +9,12 @@ import App from './App'
 import router from './router'
 import store from './vuex/store'
 import common from './utils/common'
-import axios from './utils/httpAjax'
-
-Vue.prototype.$axios = axios.create({})
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+axios.defaults.baseURL = 'http://123.206.232.11:8080/coachFront/api/front/';
+axios.defaults.headers.post['Content-Type'] = 'application/json';
+Vue.use(VueAxios, axios)
+//Vue.property.baseUrl = ""
 
 Vue.use(MintUI)
 Vue.use(VueAwesomeSwiper)
@@ -50,15 +53,16 @@ router.beforeEach((to, from, next) => {
       next()
     }
 
-})
+});
 
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
-new Vue({
+var vue =  new Vue({
   el: '#app',
   store,
   router,
   template: '<App/>',
   components: { App }
 })
+export default{vue}
